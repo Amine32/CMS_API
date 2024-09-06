@@ -11,4 +11,9 @@ public class Enums {
         C,
         D
     }
+
+    public enum FraudResponse {
+        APPROVED,
+        REJECTED
+    }
 }

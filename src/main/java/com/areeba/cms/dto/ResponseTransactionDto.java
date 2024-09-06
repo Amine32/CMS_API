@@ -14,4 +14,5 @@ public class ResponseTransactionDto {
     private BigDecimal transactionAmount;
     private Timestamp transactionDate;
     private String transactionType;
+    private String response;
 }

@@ -35,4 +35,8 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @NotNull(message = "Transaction type is mandatory")
     private Enums.TransactionType transactionType;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull(message = "Missing fraud check")
+    private Enums.FraudResponse response;
 }

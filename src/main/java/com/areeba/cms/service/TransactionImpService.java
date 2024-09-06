@@ -2,8 +2,8 @@ package com.areeba.cms.service;
 
 import com.areeba.cms.common.DtoConverter;
 import com.areeba.cms.common.Enums;
-import com.areeba.cms.dto.RequestTransactionDto;
-import com.areeba.cms.dto.ResponseTransactionDto;
+import com.areeba.cms.dto.*;
+import com.areeba.cms.feign.FraudCheckClient;
 import com.areeba.cms.model.Transaction;
 import com.areeba.cms.repository.TransactionRepository;
 import com.areeba.cms.common.EntityFetcher;
@@ -23,6 +23,7 @@ public class TransactionImpService implements TransactionService {
     public final TransactionRepository transactionRepository;
     public final AccountImpService accountService;
     public final CardImpService cardService;
+    private final FraudCheckClient fraudClient;
 
     @Override
     @Transactional(readOnly = true)
@@ -57,9 +58,23 @@ public class TransactionImpService implements TransactionService {
                 ? transactionDto.getAmount()
                 : BigDecimal.valueOf(0));
 
-        accountService.changeAccountBalance(accountId, transactionAmount);
-
         Transaction transaction = DtoConverter.convert(transactionDto, Transaction.class);
+
+        //Check for fraud
+        boolean isFraudulent = fraudClient.checkFraud(
+                new RequestFraudCheckDto(transaction.getCard().getId(), transaction.getId(), transactionAmount));
+        if (!isFraudulent) {
+            transaction.setResponse(Enums.FraudResponse.APPROVED);
+            accountService.changeAccountBalance(accountId, transactionAmount);
+        } else {
+            transaction.setResponse(Enums.FraudResponse.REJECTED);
+        }
+
         return DtoConverter.convert(transactionRepository.save(transaction), ResponseTransactionDto.class);
+    }
+
+    @Override
+    public ResponseTransactionCountDto getTransactionCountByCardIdAndTransactionDateBetween(RequestTransactionCountDto dto) {
+        return new ResponseTransactionCountDto(transactionRepository.countByCardIdAndTransactionDateBetween(dto.getCardId(), dto.getStartDate(), dto.getEndDate()));
     }
 }

@@ -1,8 +1,6 @@
 package com.areeba.cms.controller;
 
-import com.areeba.cms.dto.RequestTransactionDto;
-import com.areeba.cms.dto.ResponseErrorDto;
-import com.areeba.cms.dto.ResponseTransactionDto;
+import com.areeba.cms.dto.*;
 import com.areeba.cms.service.TransactionImpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -70,5 +68,18 @@ public class TransactionController {
     public ResponseTransactionDto createTransaction(
             @RequestBody RequestTransactionDto transactionDto) {
         return transactionService.createTransaction(transactionDto);
+    }
+
+    @Operation(summary = "Get transaction count by CardId and TransactionDateBetween", description = "Retrieve number of transactions by a card by its ID in a specific timeframe")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body or business rule violations",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
+    })
+    @PostMapping("/getTransactionCount")
+    public ResponseTransactionCountDto getTransactionCountByCardIdAndTransactionDateBetween(
+            @RequestBody RequestTransactionCountDto dto
+    ) {
+        return transactionService.getTransactionCountByCardIdAndTransactionDateBetween(dto);
     }
 }
