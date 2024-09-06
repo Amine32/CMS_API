@@ -1,9 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseAccountDto;
+import com.example.demo.dto.ResponseErrorDto;
 import com.example.demo.service.AccountImpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -27,7 +30,8 @@ public class AccountController {
     @Operation(summary = "Get all accounts", description = "Retrieve a paginated list of all accounts")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved accounts"),
-            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters")
+            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/all")
     public Page<ResponseAccountDto> getAllAccounts(
@@ -40,7 +44,8 @@ public class AccountController {
     @Operation(summary = "Get account by ID", description = "Retrieve account information by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved account"),
-            @ApiResponse(responseCode = "404", description = "Account not found with provided ID")
+            @ApiResponse(responseCode = "404", description = "Account not found with provided ID",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/{accountId}")
     public ResponseAccountDto getAccountById(
@@ -51,7 +56,8 @@ public class AccountController {
     @Operation(summary = "Create a new account", description = "Create a new account with the provided data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Account created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
+            @ApiResponse(responseCode = "400", description = "Invalid request body",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,7 +68,8 @@ public class AccountController {
     @Operation(summary = "Delete an account", description = "Delete the account with the provided ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully deleted account"),
-            @ApiResponse(responseCode = "404", description = "Account not found")
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @DeleteMapping("/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -74,7 +81,8 @@ public class AccountController {
     @Operation(summary = "Invert account status", description = "Activate or deactivate an account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully inverted account status"),
-            @ApiResponse(responseCode = "404", description = "Account not found")
+            @ApiResponse(responseCode = "404", description = "Account not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @PatchMapping("/invertActivation/{accountId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

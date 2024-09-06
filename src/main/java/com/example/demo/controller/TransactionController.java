@@ -1,10 +1,13 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.RequestTransactionDto;
+import com.example.demo.dto.ResponseErrorDto;
 import com.example.demo.dto.ResponseTransactionDto;
 import com.example.demo.service.TransactionImpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,8 +31,10 @@ public class TransactionController {
     @Operation(summary = "Get transactions by card ID", description = "Retrieve a paginated list of transactions for the specified card")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved transactions"),
-            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters"),
-            @ApiResponse(responseCode = "404", description = "Card not found")
+            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "Card not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/byCard/{cardId}")
     public Page<ResponseTransactionDto> getTransactionsByCardId(
@@ -43,7 +48,8 @@ public class TransactionController {
     @Operation(summary = "Get transaction by ID", description = "Retrieve transaction information by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved transaction"),
-            @ApiResponse(responseCode = "404", description = "Transaction not found with provided ID")
+            @ApiResponse(responseCode = "404", description = "Transaction not found with provided ID",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/{transactionId}")
     public ResponseTransactionDto getTransactionById(
@@ -54,8 +60,10 @@ public class TransactionController {
     @Operation(summary = "Create a new transaction", description = "Create a new transaction with the provided data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Transaction created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body or business rule violations"),
-            @ApiResponse(responseCode = "404", description = "Card or Account not found")
+            @ApiResponse(responseCode = "400", description = "Invalid request body or business rule violations",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "Card or Account not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -2,9 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ResponseCardDto;
 import com.example.demo.dto.RequestCardDto;
+import com.example.demo.dto.ResponseErrorDto;
 import com.example.demo.service.CardImpService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +32,8 @@ public class CardController {
     @Operation(summary = "Get all cards", description = "Retrieve a paginated list of all cards")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved cards"),
-            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters")
+            @ApiResponse(responseCode = "400", description = "Invalid page or size parameters",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/all")
     public Page<ResponseCardDto> getAllCards(
@@ -42,7 +46,8 @@ public class CardController {
     @Operation(summary = "Get card by ID", description = "Retrieve card information by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved card"),
-            @ApiResponse(responseCode = "404", description = "Card not found with provided ID")
+            @ApiResponse(responseCode = "404", description = "Card not found with provided ID",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @GetMapping("/{cardId}")
     public ResponseCardDto getCardById(
@@ -53,9 +58,10 @@ public class CardController {
     @Operation(summary = "Create a new card", description = "Create a new card with the provided data")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Card created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body"),
-            @ApiResponse(responseCode = "404", description = "Account not found with provided ID"),
-            @ApiResponse(responseCode = "409", description = "Card duplication")
+            @ApiResponse(responseCode = "400", description = "Invalid request body",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class))),
+            @ApiResponse(responseCode = "404", description = "Account not found with provided ID",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
 
     })
     @PostMapping
@@ -67,7 +73,8 @@ public class CardController {
     @Operation(summary = "Renew card expiry date", description = "Renew the expiry date of the card")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully renewed card"),
-            @ApiResponse(responseCode = "404", description = "Card not found")
+            @ApiResponse(responseCode = "404", description = "Card not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @PatchMapping("/renew/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -80,7 +87,8 @@ public class CardController {
     @Operation(summary = "Invert card status", description = "Activate or deactivate a card")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully inverted card status"),
-            @ApiResponse(responseCode = "404", description = "Card not found")
+            @ApiResponse(responseCode = "404", description = "Card not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @PatchMapping("/invertActivation/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -92,7 +100,8 @@ public class CardController {
     @Operation(summary = "Delete a card", description = "Delete the card with the provided ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Successfully deleted card"),
-            @ApiResponse(responseCode = "404", description = "Card not found")
+            @ApiResponse(responseCode = "404", description = "Card not found",
+                    content = @Content(schema = @Schema(implementation = ResponseErrorDto.class)))
     })
     @DeleteMapping("/{cardId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
